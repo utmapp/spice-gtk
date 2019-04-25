@@ -25,7 +25,7 @@
 #include "spice-gstaudio.h"
 #include "spice-common.h"
 #include "spice-session.h"
-#include "spice-util.h"
+#include "spice-util-priv.h"
 
 struct stream {
     GstElement              *pipe;
@@ -243,7 +243,7 @@ static void playback_stop(SpiceGstaudio *gstaudio)
     if (p->playback.pipe)
         gst_element_set_state(p->playback.pipe, GST_STATE_READY);
     if (p->mmtime_id != 0) {
-        g_source_remove(p->mmtime_id);
+        g_spice_source_remove(p->mmtime_id);
         p->mmtime_id = 0;
     }
 }
@@ -320,7 +320,7 @@ cleanup:
 
     if (!p->playback.fake && p->mmtime_id == 0) {
         update_mmtime_timeout_cb(gstaudio);
-        p->mmtime_id = g_timeout_add_seconds(1, update_mmtime_timeout_cb, gstaudio);
+        p->mmtime_id = g_spice_timeout_add_seconds(1, update_mmtime_timeout_cb, gstaudio);
     }
 }
 

@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "gio-coroutine.h"
+#include "spice-util-priv.h"
 
 typedef struct _GConditionWaitSource
 {
@@ -57,14 +58,14 @@ GIOCondition g_coroutine_socket_wait(GCoroutine *self,
 
     src = g_socket_create_source(sock, cond | G_IO_HUP | G_IO_ERR | G_IO_NVAL, NULL);
     g_source_set_callback(src, (GSourceFunc)g_io_wait_helper, self, NULL);
-    self->wait_id = g_source_attach(src, NULL);
+    self->wait_id = g_source_attach(src, spice_main_context());
     ret = coroutine_yield(NULL);
     g_source_unref(src);
 
     if (ret != NULL)
         val = *ret;
     else
-        g_source_remove(self->wait_id);
+        g_spice_source_remove(self->wait_id);
 
     self->wait_id = 0;
     return val;
@@ -77,7 +78,7 @@ void g_coroutine_condition_cancel(GCoroutine *coroutine)
     if (coroutine->condition_id == 0)
         return;
 
-    g_source_remove(coroutine->condition_id);
+    g_spice_source_remove(coroutine->condition_id);
     coroutine->condition_id = 0;
 }
 
@@ -167,7 +168,7 @@ gboolean g_coroutine_condition_wait(GCoroutine *self, GConditionWaitFunc func, g
     vsrc->func = func;
     vsrc->data = data;
 
-    self->condition_id = g_source_attach(src, NULL);
+    self->condition_id = g_source_attach(src, spice_main_context());
     g_source_set_callback(src, g_condition_wait_helper, self, NULL);
     coroutine_yield(NULL);
     g_source_unref(src);
@@ -221,7 +222,7 @@ g_coroutine_signal_emit(gpointer instance, guint signal_id,
         g_signal_emit_valist(instance, signal_id, detail, data.var_args);
     } else {
         g_object_ref(instance);
-        g_idle_add(emit_main_context, &data);
+        g_spice_idle_add(emit_main_context, &data);
         coroutine_yield(NULL);
         g_warn_if_fail(data.notified);
         g_object_unref(instance);
@@ -258,7 +259,7 @@ void g_coroutine_object_notify(GObject *object,
         data.propname = (gpointer)property_name;
         data.notified = FALSE;
 
-        g_idle_add(notify_main_context, &data);
+        g_spice_idle_add(notify_main_context, &data);
 
         /* This switches to the system coroutine context, lets
          * the idle function run to dispatch the signal, and

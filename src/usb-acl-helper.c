@@ -209,7 +209,7 @@ void spice_usb_acl_helper_open_acl_async(SpiceUsbAclHelper *self,
         g_task_return_error(task, err);
         goto done;
     }
-    g_child_watch_add(helper_pid, helper_child_watch_cb, NULL);
+    g_spice_child_watch_add(helper_pid, helper_child_watch_cb, NULL);
 
     priv->in_ch = g_io_channel_unix_new(in);
     g_io_channel_set_close_on_unref(priv->in_ch, TRUE);

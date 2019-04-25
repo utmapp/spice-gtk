@@ -45,6 +45,7 @@
 #include "spice-client.h"
 #include "spice-marshal.h"
 #include "usb-device-manager-priv.h"
+#include "spice-util-priv.h"
 
 #include <glib/gi18n-lib.h>
 
@@ -1142,7 +1143,7 @@ static int spice_usb_device_manager_hotplug_cb(libusb_context       *ctx,
     args->self = g_object_ref(self);
     args->device = libusb_ref_device(device);
     args->event = event;
-    g_idle_add(spice_usb_device_manager_hotplug_idle_cb, args);
+    g_spice_idle_add(spice_usb_device_manager_hotplug_idle_cb, args);
     return 0;
 }
 #endif // USE_USBREDIR

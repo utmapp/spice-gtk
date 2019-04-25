@@ -98,7 +98,7 @@ static void output_queue_free(OutputQueue *queue)
     g_queue_free_full(queue->queue, g_free);
     g_clear_object(&queue->output);
     if (queue->idle_id)
-        g_source_remove(queue->idle_id);
+        g_spice_source_remove(queue->idle_id);
     g_free(queue);
 }
 
@@ -121,7 +121,7 @@ static void output_queue_flush_cb(GObject *source_object,
     g_clear_error(&error);
 
     if (!q->idle_id)
-        q->idle_id = g_idle_add(output_queue_idle, q);
+        q->idle_id = g_spice_idle_add(output_queue_idle, q);
 
     g_free(e);
 }
@@ -176,7 +176,7 @@ static void output_queue_push(OutputQueue *q, const guint8 *buf, gsize size,
     g_queue_push_tail(q->queue, e);
 
     if (!q->idle_id && !q->flushing)
-        q->idle_id = g_idle_add(output_queue_idle, q);
+        q->idle_id = g_spice_idle_add(output_queue_idle, q);
 }
 
 typedef struct Client

@@ -446,7 +446,7 @@ static void spice_display_dispose(GObject *obj)
     d->gtk_session = NULL;
 
     if (d->key_delayed_id) {
-        g_source_remove(d->key_delayed_id);
+        g_spice_source_remove(d->key_delayed_id);
         d->key_delayed_id = 0;
     }
 
@@ -1351,7 +1351,7 @@ static void key_press_and_release(SpiceDisplay *display)
     d->key_delayed_scancode = 0;
 
     if (d->key_delayed_id) {
-        g_source_remove(d->key_delayed_id);
+        g_spice_source_remove(d->key_delayed_id);
         d->key_delayed_id = 0;
     }
 }
@@ -1368,7 +1368,7 @@ static gboolean key_press_delayed(gpointer data)
     d->key_delayed_scancode = 0;
 
     if (d->key_delayed_id) {
-        g_source_remove(d->key_delayed_id);
+        g_spice_source_remove(d->key_delayed_id);
         d->key_delayed_id = 0;
     }
 
@@ -1421,7 +1421,7 @@ static void send_key(SpiceDisplay *display, int scancode, SendKeyType type, gboo
             d->keypress_delay != 0 &&
             !(d->key_state[i] & m)) {
             g_warn_if_fail(d->key_delayed_id == 0);
-            d->key_delayed_id = g_timeout_add(d->keypress_delay, key_press_delayed, display);
+            d->key_delayed_id = g_spice_timeout_add(d->keypress_delay, key_press_delayed, display);
             d->key_delayed_scancode = scancode;
         } else
             spice_inputs_channel_key_press(d->inputs, scancode);

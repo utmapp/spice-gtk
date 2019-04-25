@@ -183,13 +183,13 @@ static void schedule_frame(SpiceGstDecoder *decoder)
         }
 
         if (spice_mmtime_diff(now, gstframe->frame->mm_time) < 0) {
-            decoder->timer_id = g_timeout_add(gstframe->frame->mm_time - now,
-                                              display_frame, decoder);
+            decoder->timer_id = g_spice_timeout_add(gstframe->frame->mm_time - now,
+                                                    display_frame, decoder);
         } else if (decoder->display_frame && !decoder->pending_samples) {
             /* Still attempt to display the least out of date frame so the
              * video is not completely frozen for an extended period of time.
              */
-            decoder->timer_id = g_timeout_add(0, display_frame, decoder);
+            decoder->timer_id = g_spice_timeout_add(0, display_frame, decoder);
         } else {
             SPICE_DEBUG("%s: rendering too late by %u ms (ts: %u, mmtime: %u), dropping",
                         __FUNCTION__, now - gstframe->frame->mm_time,
@@ -515,7 +515,7 @@ static void spice_gst_decoder_reschedule(VideoDecoder *video_decoder)
     g_mutex_unlock(&decoder->queues_mutex);
 
     if (timer_id != 0) {
-        g_source_remove(timer_id);
+        g_spice_source_remove(timer_id);
     }
     schedule_frame(decoder);
 }
@@ -535,7 +535,7 @@ static void spice_gst_decoder_destroy(VideoDecoder *video_decoder)
      * scheduled display_frame() call and drop the queued frames.
      */
     if (decoder->timer_id) {
-        g_source_remove(decoder->timer_id);
+        g_spice_source_remove(decoder->timer_id);
     }
     g_mutex_clear(&decoder->queues_mutex);
     g_queue_free_full(decoder->decoding_queue, (GDestroyNotify)free_gst_frame);

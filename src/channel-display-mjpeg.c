@@ -194,7 +194,7 @@ static void mjpeg_decoder_schedule(MJpegDecoder *decoder)
             if (spice_mmtime_diff(time, frame->mm_time) <= 0) {
                 guint32 d = frame->mm_time - time;
                 decoder->cur_frame = frame;
-                decoder->timer_id = g_timeout_add(d, mjpeg_decoder_decode_frame, decoder);
+                decoder->timer_id = g_spice_timeout_add(d, mjpeg_decoder_decode_frame, decoder);
                 break;
             }
 
@@ -218,7 +218,7 @@ static void _msg_in_unref_func(gpointer data, gpointer user_data)
 static void mjpeg_decoder_drop_queue(MJpegDecoder *decoder)
 {
     if (decoder->timer_id != 0) {
-        g_source_remove(decoder->timer_id);
+        g_spice_source_remove(decoder->timer_id);
         decoder->timer_id = 0;
     }
     if (decoder->cur_frame) {
@@ -270,7 +270,7 @@ static void mjpeg_decoder_reschedule(VideoDecoder *video_decoder)
 
     SPICE_DEBUG("%s", __FUNCTION__);
     if (decoder->timer_id != 0) {
-        g_source_remove(decoder->timer_id);
+        g_spice_source_remove(decoder->timer_id);
         decoder->timer_id = 0;
     }
     mjpeg_decoder_schedule(decoder);
