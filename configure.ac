@@ -147,7 +147,8 @@ AM_CONDITIONAL([WITH_GTK],[test "$with_gtk" != "no"])
 AS_IF([test "x$with_gtk" != "xno"],
       [AS_IF([test "x$os_win32" = "xyes"],
              [PKG_CHECK_MODULES(GTK, gtk+-3.0 >= $GTK_REQUIRED)],
-             [PKG_CHECK_MODULES(GTK, gtk+-3.0 >= $GTK_REQUIRED epoxy)])]
+             [PKG_CHECK_MODULES(GTK, gtk+-3.0 >= $GTK_REQUIRED epoxy)])
+        PKG_CHECK_MODULES(CAIRO, cairo >= 1.2.0)]
       [GTK_CFLAGS="$GTK_CFLAGS -DGDK_VERSION_MIN_REQUIRED=$GTK_ENCODED_VERSION \
                                -DGDK_VERSION_MAX_ALLOWED=$GTK_ENCODED_VERSION"])
 SPICE_GTK_REQUIRES="${SPICE_GTK_REQUIRES} gtk+-3.0 >= $GTK_REQUIRED"
@@ -168,8 +169,6 @@ GLIB2_CFLAGS="$GLIB2_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=$GLIB2_ENCODED_VERSION \
 PKG_CHECK_MODULES(GOBJECT2, gobject-2.0)
 
 PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.36 $gio_os)
-
-PKG_CHECK_MODULES(CAIRO, cairo >= 1.2.0)
 
 PKG_CHECK_MODULES(GTHREAD, gthread-2.0)
 
