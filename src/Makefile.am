@@ -201,6 +201,7 @@ libspice_client_glib_impl_la_LIBADD =					\
 	$(USBREDIR_LIBS)						\
 	$(GUDEV_LIBS)							\
 	$(PHODAV_LIBS)							\
+	$(UCONTEXT_LIBS)					\
 	$(NULL)
 
 if WITH_POLKIT
