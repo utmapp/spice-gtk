@@ -146,7 +146,7 @@ endif
 
 if spice_gtk_coroutine == 'gthread'
   spice_client_glib_sources += 'coroutine_gthread.c'
-elif spice_gtk_coroutine == 'ucontext'
+elif spice_gtk_coroutine in ['ucontext', 'libucontext']
   spice_client_glib_sources += ['continuation.c',
                                 'continuation.h',
                                 'coroutine_ucontext.c']

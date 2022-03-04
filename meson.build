@@ -319,6 +319,13 @@ if spice_gtk_coroutine == 'ucontext'
   endif
   endif
 
+if spice_gtk_coroutine == 'libucontext'
+  d = dependency('libucontext')
+  spice_glib_deps += d
+  spice_gtk_config_data.set('WITH_UCONTEXT', '1')
+  spice_gtk_config_data.set('HAVE_LIBUCONTEXT', '1')
+endif
+
 if spice_gtk_coroutine == 'gthread'
   spice_gtk_config_data.set('WITH_GTHREAD', '1')
 endif
