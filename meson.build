@@ -107,8 +107,8 @@ foreach dep, version : deps
 endforeach
 
 # mandatory dependencies, without specific version requirement
-# TODO: specify minimum version for cairo, jpeg and zlib?
-deps = ['cairo', 'libjpeg', 'zlib', 'json-glib-1.0']
+# TODO: specify minimum version for jpeg and zlib?
+deps = ['libjpeg', 'zlib', 'json-glib-1.0']
 if host_machine.system() == 'windows'
   deps += 'gio-windows-2.0'
 else
@@ -149,6 +149,8 @@ d = dependency('gtk+-3.0', version : '>= @0@'.format(gtk_version_required),
 summary_info += {'gtk': d.found()}
 if d.found()
   spice_gtk_deps += d
+  # TODO: specify minimum version for cairo?
+  spice_gtk_deps += dependency('cairo')
   if host_machine.system() != 'windows'
     spice_gtk_deps += dependency('epoxy')
     spice_gtk_deps += dependency('x11')
