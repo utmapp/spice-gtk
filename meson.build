@@ -64,7 +64,8 @@ headers = [
   'sys/types.h',
   'netinet/in.h',
   'arpa/inet.h',
-  'valgrind/valgrind.h'
+  'valgrind/valgrind.h',
+  'sys/disk.h'
 ]
 
 foreach header : headers

@@ -30,6 +30,7 @@
 #include <libusb.h>
 #include <fcntl.h>
 
+#define HAVE_PHYSICAL_CD 1
 #ifdef G_OS_WIN32
 #include <windows.h>
 #include <ntddcdrm.h>
@@ -37,12 +38,14 @@
 #else
 #include <sys/stat.h>
 #include <sys/ioctl.h>
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(HAVE_SYS_DISK_H)
 #include <sys/disk.h>
 #include <fcntl.h>
-#else
+#elif defined(__linux__)
 #include <linux/fs.h>
 #include <linux/cdrom.h>
+#else
+#undef HAVE_PHYSICAL_CD
 #endif
 #endif
 
@@ -56,7 +59,9 @@ typedef struct SpiceCdLU {
     uint64_t size;
     uint32_t blockSize;
     uint32_t loaded : 1;
+#ifdef HAVE_PHYSICAL_CD
     uint32_t device : 1;
+#endif
 } SpiceCdLU;
 
 #define MAX_LUN_PER_DEVICE              1
@@ -99,7 +104,9 @@ typedef struct SpiceUsbEmulatedDevice UsbCd;
 
 static int cd_device_open_stream(SpiceCdLU *unit, const char *filename)
 {
+#ifdef HAVE_PHYSICAL_CD
     unit->device = 0;
+#endif
 
     if (!unit->filename && !filename) {
         SPICE_DEBUG("%s: file name not provided", __FUNCTION__);
@@ -120,6 +127,7 @@ static int cd_device_open_stream(SpiceCdLU *unit, const char *filename)
     }
 
     struct stat file_stat = { 0 };
+#ifdef HAVE_PHYSICAL_CD
     if (fstat(fd, &file_stat) || file_stat.st_size == 0) {
         file_stat.st_size = 0;
         unit->device = 1;
@@ -138,6 +146,12 @@ static int cd_device_open_stream(SpiceCdLU *unit, const char *filename)
         }
 #endif
     }
+#else // HAVE_PHYSICAL_CD
+    if (fstat(fd, &file_stat) != 0) {
+        SPICE_DEBUG("%s: can't run stat on %s", __FUNCTION__, unit->filename);
+        return -1;
+    }
+#endif
     unit->size = file_stat.st_size;
     close(fd);
     if (unit->size) {
@@ -152,6 +166,8 @@ static int cd_device_open_stream(SpiceCdLU *unit, const char *filename)
 
     return 0;
 }
+
+#ifdef HAVE_PHYSICAL_CD
 
 static int cd_device_load(SpiceCdLU *unit, gboolean load)
 {
@@ -214,7 +230,9 @@ static int cd_device_check(SpiceCdLU *unit)
     return error;
 }
 
-#else
+#endif // HAVE_PHYSICAL_CD
+
+#else // G_OS_WIN32
 
 static gboolean is_device_name(const char *filename)
 {
@@ -380,6 +398,7 @@ static void close_stream(SpiceCdLU *unit)
 static gboolean load_lun(UsbCd *d, int unit, gboolean load)
 {
     gboolean b = TRUE;
+#ifdef HAVE_PHYSICAL_CD
     if (load && d->units[unit].device) {
         // there is one possible problem in case our backend is the
         // local CD device and it is ejected
@@ -389,6 +408,7 @@ static gboolean load_lun(UsbCd *d, int unit, gboolean load)
             return FALSE;
         }
     }
+#endif
 
     if (load) {
         CdScsiMediaParameters media_params = { 0 };
