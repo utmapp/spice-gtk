@@ -228,10 +228,18 @@ if d1.found() and d2.found() and d3.found()
     spice_glib_deps += [d1, d2, d3]
     spice_gtk_config_data.set('USE_USBREDIR', '1')
     spice_gtk_has_usbredir = true
+    if get_option('physical-cd').allowed()
+      spice_gtk_config_data.set('HAVE_PHYSICAL_CD', '1')
+    endif
   else
     warning('USB redirection disabled on big endian machine as ' +
             'usbredir only support little endian')
   endif
+endif
+summary_info += {'physical-cd': get_option('physical-cd')}
+
+if get_option('physical-cd').enabled() and not spice_gtk_has_usbredir
+  error('Physical CD support cannot be enabled without USB redirection support!')
 endif
 
 d = dependency('libcap-ng', required : get_option('libcap-ng'))

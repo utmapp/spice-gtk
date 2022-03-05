@@ -19,6 +19,10 @@ option('usbredir',
     type : 'feature',
     description : 'Enable usbredir support')
 
+option('physical-cd',
+    type : 'feature',
+    description : 'Enable support of physical CD drives')
+
 option('libcap-ng',
        type : 'feature',
        description: 'Enable libcap-ng support for the USB acl helper')
