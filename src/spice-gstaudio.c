@@ -24,7 +24,7 @@
 #include "spice-gstaudio.h"
 #include "spice-common.h"
 #include "spice-session.h"
-#include "spice-util.h"
+#include "spice-util-priv.h"
 
 struct stream {
     GstElement              *pipe;
@@ -79,7 +79,7 @@ static void spice_gstaudio_dispose(GObject *obj)
 
     stream_dispose(&p->playback);
     if (p->rbus_watch_id > 0) {
-        g_source_remove(p->rbus_watch_id);
+        g_spice_source_remove(p->rbus_watch_id);
         p->rbus_watch_id = 0;
     }
     stream_dispose(&p->record);
@@ -197,7 +197,7 @@ static void record_start(SpiceRecordChannel *channel, gint format, gint channels
          p->record.channels != channels)) {
         gst_element_set_state(p->record.pipe, GST_STATE_NULL);
         if (p->rbus_watch_id > 0) {
-            g_source_remove(p->rbus_watch_id);
+            g_spice_source_remove(p->rbus_watch_id);
             p->rbus_watch_id = 0;
         }
         g_clear_pointer(&p->record.pipe, gst_object_unref);
@@ -251,7 +251,7 @@ static void playback_stop(SpiceGstaudio *gstaudio)
     if (p->playback.pipe)
         gst_element_set_state(p->playback.pipe, GST_STATE_READY);
     if (p->mmtime_id != 0) {
-        g_source_remove(p->mmtime_id);
+        g_spice_source_remove(p->mmtime_id);
         p->mmtime_id = 0;
     }
 }
@@ -328,7 +328,7 @@ cleanup:
 
     if (!p->playback.fake && p->mmtime_id == 0) {
         update_mmtime_timeout_cb(gstaudio);
-        p->mmtime_id = g_timeout_add_seconds(1, update_mmtime_timeout_cb, gstaudio);
+        p->mmtime_id = g_spice_timeout_add_seconds(1, update_mmtime_timeout_cb, gstaudio);
     }
 }
 

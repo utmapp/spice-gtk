@@ -38,6 +38,7 @@
 #include "spice-client.h"
 #include "spice-marshal.h"
 #include "usb-device-manager-priv.h"
+#include "spice-util-priv.h"
 
 #include <glib/gi18n-lib.h>
 
@@ -865,7 +866,7 @@ static void spice_usb_device_manager_hotplug_cb(void *user_data,
     args->manager = g_object_ref(manager);
     args->device = spice_usb_backend_device_ref(dev);
     args->added = added;
-    g_idle_add(spice_usb_device_manager_hotplug_idle_cb, args);
+    g_spice_idle_add(spice_usb_device_manager_hotplug_idle_cb, args);
 }
 
 static void spice_usb_device_manager_channel_connect_cb(GObject *gobject,

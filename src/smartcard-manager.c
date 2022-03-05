@@ -27,6 +27,7 @@
 #include "smartcard-manager.h"
 #include "smartcard-manager-priv.h"
 #include "spice-marshal.h"
+#include "spice-util-priv.h"
 
 /**
  * SECTION:smartcard-manager
@@ -111,7 +112,7 @@ static void spice_smartcard_manager_finalize(GObject *gobject)
     SpiceSmartcardManagerPrivate *priv = manager->priv;
 
     if (priv->monitor_id != 0) {
-        g_source_remove(priv->monitor_id);
+        g_spice_source_remove(priv->monitor_id);
         priv->monitor_id = 0;
     }
 
@@ -364,7 +365,7 @@ static guint smartcard_monitor_add(SmartcardSourceFunc callback,
 
     source = smartcard_monitor_source_new();
     g_source_set_callback(source, (GSourceFunc)callback, user_data, NULL);
-    id = g_source_attach(source, NULL);
+    id = g_source_attach(source, spice_main_context());
     g_source_unref(source);
 
     return id;
