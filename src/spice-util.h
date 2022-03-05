@@ -30,6 +30,7 @@ gulong spice_g_signal_connect_object(gpointer instance,
                                      gpointer gobject,
                                      GConnectFlags connect_flags);
 gchar* spice_uuid_to_string(const guint8 uuid[16]);
+void spice_util_set_main_context(GMainContext *context);
 
 #define SPICE_DEBUG(fmt, ...)                                   \
     do {                                                        \
