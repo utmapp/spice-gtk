@@ -458,11 +458,13 @@ SpiceUsbDeviceWidgetPrivate
 spice_util_set_debug
 spice_util_get_version_string
 spice_uuid_to_string
+spice_util_set_main_context
 <SUBSECTION Private>
 SPICE_DEBUG
 spice_util_get_debug
 SPICE_RESERVED_PADDING
 spice_g_signal_connect_object
+spice_main_context
 </SECTION>
 
 <SECTION>

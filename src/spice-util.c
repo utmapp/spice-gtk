@@ -475,3 +475,163 @@ void spice_mono_edge_highlight(unsigned width, unsigned height,
         xor += bpl;
     }
 }
+
+static GMainContext *spice_context = NULL;
+
+/**
+ * spice_util_set_main_context:
+ * @context: Main context for SPICE
+ *
+ * Main context for events and sources. This must be called first if the
+ * application uses multiple GLib based libraries. In that case, the
+ * caller is responsible for setting up a separate main context and main loop
+ * for SPICE. The context will be retained. To prevent memory leaks,
+ * spice_util_set_main_context(NULL) should be called when finished which sets
+ * the main context back to the default.
+ *
+ * Since: 0.41
+ **/
+void spice_util_set_main_context(GMainContext *context)
+{
+    if (spice_context) {
+        g_main_context_unref(spice_context);
+    }
+    spice_context = context;
+    if (spice_context) {
+        g_main_context_ref(spice_context);
+    }
+}
+
+/**
+ * spice_main_context:
+ *
+ * Returns: either the main context set by spice_util_set_main_context() or
+ * NULL indicating the default main context.
+ *
+ * Since: 0.41
+ **/
+G_GNUC_INTERNAL
+GMainContext *spice_main_context(void)
+{
+    return spice_context;
+}
+
+G_GNUC_INTERNAL
+guint
+g_spice_timeout_add(guint interval,
+                    GSourceFunc function,
+                    gpointer data)
+{
+    return g_spice_timeout_add_full(G_PRIORITY_DEFAULT, 
+                 interval, function, data, NULL);
+}
+
+G_GNUC_INTERNAL
+guint
+g_spice_timeout_add_seconds(guint interval,
+                            GSourceFunc function,
+                            gpointer data)
+{
+    GSource *source = NULL;
+    GMainContext *context;
+    guint id;
+
+    g_return_val_if_fail(function != NULL, 0);
+
+    context = spice_main_context();
+
+    source = g_timeout_source_new_seconds(interval);
+    g_source_set_callback(source, function, data, NULL);
+    id = g_source_attach(source, context);
+    g_source_unref(source);
+
+    return id;
+}
+
+G_GNUC_INTERNAL
+guint
+g_spice_timeout_add_full (gint priority,
+                          guint interval,
+                          GSourceFunc function,
+                          gpointer data,
+                          GDestroyNotify notify)
+{
+    GSource *source;
+    GMainContext *context;
+    guint id;
+
+    g_return_val_if_fail(function != NULL, 0);
+
+    context = spice_main_context();
+    source = g_timeout_source_new(interval);
+
+    if (priority != G_PRIORITY_DEFAULT)
+        g_source_set_priority(source, priority);
+
+    g_source_set_callback(source, function, data, notify);
+    id = g_source_attach(source, context);
+
+    g_source_unref(source);
+
+    return id;
+}
+
+G_GNUC_INTERNAL
+guint
+g_spice_idle_add(GSourceFunc function,
+                 gpointer data)
+{
+    GSource *source = NULL;
+    GMainContext *context;
+    guint id;
+
+    g_return_val_if_fail(function != NULL, 0);
+
+    context = spice_main_context();
+
+    source = g_idle_source_new();
+    g_source_set_callback(source, function, data, NULL);
+    id = g_source_attach(source, context);
+    g_source_unref(source);
+
+    return id;
+}
+
+G_GNUC_INTERNAL
+guint
+g_spice_child_watch_add(GPid pid,
+                        GChildWatchFunc function,
+                        gpointer data)
+{
+    GSource *source = NULL;
+    GMainContext *context;
+    guint id;
+
+    g_return_val_if_fail(function != NULL, 0);
+
+    context = spice_main_context();
+
+    source = g_child_watch_source_new(pid);
+    g_source_set_callback(source, (GSourceFunc) function, data, NULL);
+    id = g_source_attach(source, context);
+    g_source_unref(source);
+
+    return id;
+}
+
+G_GNUC_INTERNAL
+gboolean
+g_spice_source_remove(guint tag)
+{
+    GSource *source;
+
+    g_return_val_if_fail(tag > 0, FALSE);
+
+    source = g_main_context_find_source_by_id(spice_main_context(), tag);
+    if (source)
+        g_source_destroy(source);
+    else
+        g_critical("Source ID %u was not found when attempting to remove it", tag);
+
+    return source != NULL;
+}

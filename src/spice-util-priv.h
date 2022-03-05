@@ -30,5 +30,13 @@ gchar* spice_unix2dos(const gchar *str, gssize len);
 gchar* spice_dos2unix(const gchar *str, gssize len);
 void spice_mono_edge_highlight(unsigned width, unsigned hight,
                                const guint8 *and, const guint8 *xor, guint8 *dest);
+GMainContext *spice_main_context(void);
+guint g_spice_timeout_add(guint interval, GSourceFunc function, gpointer data);
+guint g_spice_timeout_add_seconds(guint interval, GSourceFunc function, gpointer data);
+guint g_spice_timeout_add_full(gint priority, guint interval, GSourceFunc function,
+                               gpointer data, GDestroyNotify notify);
+guint g_spice_idle_add(GSourceFunc function, gpointer data);
+guint g_spice_child_watch_add(GPid pid, GChildWatchFunc function, gpointer data);
+gboolean g_spice_source_remove(guint tag);
 
 G_END_DECLS
