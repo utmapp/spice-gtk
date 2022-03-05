@@ -285,7 +285,7 @@ static void clipboard_release_delay_remove(SpiceGtkSession *self, guint selectio
         clipboard_release(self, selection);
     }
 
-    g_source_remove(s->clipboard_release_delay[selection]);
+    g_spice_source_remove(s->clipboard_release_delay[selection]);
     s->clipboard_release_delay[selection] = 0;
 }
 
@@ -865,7 +865,7 @@ static void clipboard_get(GtkClipboard *clipboard,
 
     ri.selection_data = selection_data;
     ri.info = info;
-    ri.loop = g_main_loop_new(NULL, FALSE);
+    ri.loop = g_main_loop_new(spice_main_context(), FALSE);
     ri.selection = selection;
     ri.self = self;
 
@@ -1548,8 +1548,8 @@ static void clipboard_release_delay(SpiceMainChannel *main, guint selection,
     rel->self = self;
     rel->selection = selection;
     s->clipboard_release_delay[selection] =
-        g_timeout_add_full(G_PRIORITY_DEFAULT, CLIPBOARD_RELEASE_DELAY,
-                           clipboard_release_timeout, rel, g_free);
+        g_spice_timeout_add_full(G_PRIORITY_DEFAULT, CLIPBOARD_RELEASE_DELAY,
+                                 clipboard_release_timeout, rel, g_free);
 
 }
 

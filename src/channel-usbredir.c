@@ -709,7 +709,7 @@ static void usbredir_handle_msg(SpiceChannel *c, SpiceMsgIn *in)
         err_data.device = spice_usb_backend_device_ref(device);
         err_data.error = err;
         spice_usbredir_channel_unlock(channel);
-        g_idle_add(device_error, &err_data);
+        g_spice_idle_add(device_error, &err_data);
         coroutine_yield(NULL);
 
         spice_usb_backend_device_unref(err_data.device);

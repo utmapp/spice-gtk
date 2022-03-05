@@ -744,9 +744,9 @@ void spice_msg_out_send(SpiceMsgOut *out)
     if (was_empty && !c->xmit_queue_wakeup_id) {
         c->xmit_queue_wakeup_id =
             /* Use g_timeout_add_full so that can specify the priority */
-            g_timeout_add_full(G_PRIORITY_HIGH, 0,
-                               spice_channel_idle_wakeup,
-                               out->channel, NULL);
+            g_spice_timeout_add_full(G_PRIORITY_HIGH, 0,
+                                     spice_channel_idle_wakeup,
+                                     out->channel, NULL);
     }
 
 end:
@@ -2703,7 +2703,7 @@ cleanup:
         c->event = SPICE_CHANNEL_ERROR_CONNECT;
     }
 
-    g_idle_add(spice_channel_delayed_unref, channel);
+    g_spice_idle_add(spice_channel_delayed_unref, channel);
     /* Co-routine exits now - the SpiceChannel object may no longer exist,
        so don't do anything else now unless you like SEGVs */
     return NULL;
@@ -2762,7 +2762,7 @@ static gboolean channel_connect(SpiceChannel *channel, gboolean tls)
     g_object_ref(G_OBJECT(channel)); /* Unref'd when co-routine exits */
 
     /* we connect in idle, to let previous coroutine exit, if present */
-    c->connect_delayed_id = g_idle_add(connect_delayed, channel);
+    c->connect_delayed_id = g_spice_idle_add(connect_delayed, channel);
 
     return true;
 }
@@ -2828,7 +2828,7 @@ static void channel_reset(SpiceChannel *channel, gboolean migrating)
 
     CHANNEL_DEBUG(channel, "channel reset");
     if (c->connect_delayed_id) {
-        g_source_remove(c->connect_delayed_id);
+        g_spice_source_remove(c->connect_delayed_id);
         c->connect_delayed_id = 0;
     }
 
@@ -2860,7 +2860,7 @@ static void channel_reset(SpiceChannel *channel, gboolean migrating)
     g_queue_foreach(&c->xmit_queue, (GFunc)spice_msg_out_unref, NULL);
     g_queue_clear(&c->xmit_queue);
     if (c->xmit_queue_wakeup_id) {
-        g_source_remove(c->xmit_queue_wakeup_id);
+        g_spice_source_remove(c->xmit_queue_wakeup_id);
         c->xmit_queue_wakeup_id = 0;
     }
     g_mutex_unlock(&c->xmit_queue_lock);

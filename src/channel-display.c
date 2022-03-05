@@ -147,7 +147,7 @@ static void spice_display_channel_dispose(GObject *object)
     SpiceDisplayChannelPrivate *c = SPICE_DISPLAY_CHANNEL(object)->priv;
 
     if (c->mark_false_event_id != 0) {
-        g_source_remove(c->mark_false_event_id);
+        g_spice_source_remove(c->mark_false_event_id);
         c->mark_false_event_id = 0;
     }
 
@@ -1970,7 +1970,7 @@ static void display_handle_surface_create(SpiceChannel *channel, SpiceMsgIn *in)
         surface->primary = true;
         create_canvas(channel, surface);
         if (c->mark_false_event_id != 0) {
-            g_source_remove(c->mark_false_event_id);
+            g_spice_source_remove(c->mark_false_event_id);
             c->mark_false_event_id = 0;
         }
     } else {
@@ -2011,7 +2011,7 @@ static void display_handle_surface_destroy(SpiceChannel *channel, SpiceMsgIn *in
         CHANNEL_DEBUG(channel, "%d: FIXME primary destroy, but is display really disabled?", id);
         /* this is done with a timeout in spicec as well, it's *ugly* */
         if (id != 0 && c->mark_false_event_id == 0) {
-            c->mark_false_event_id = g_timeout_add_seconds(1, display_mark_false, channel);
+            c->mark_false_event_id = g_spice_timeout_add_seconds(1, display_mark_false, channel);
         }
         c->primary = NULL;
         g_coroutine_signal_emit(channel, signals[SPICE_DISPLAY_PRIMARY_DESTROY], 0);
