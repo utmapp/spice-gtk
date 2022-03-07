@@ -231,8 +231,6 @@ static int cd_device_check(SpiceCdLU *unit)
 
 #else // G_OS_WIN32
 
-#ifdef HAVE_PHYSICAL_CD
-
 static gboolean is_device_name(const char *filename)
 {
     return g_ascii_isalpha(filename[0]) && filename[1] == ':' &&
@@ -252,6 +250,8 @@ static HANDLE open_file(const char *filename)
     }
     return h;
 }
+
+#ifdef HAVE_PHYSICAL_CD
 
 static uint32_t ioctl_out(HANDLE h, uint32_t code, void *out_buffer, uint32_t out_size)
 {
@@ -294,10 +294,8 @@ static int cd_device_open_stream(SpiceCdLU *unit, const char *filename)
     }
     if (!filename) {
         // reopening the stream on existing file name
-#if defined HAVE_PHYSICAL_CD
     } else if (is_device_name(filename)) {
         unit->filename = g_strdup_printf("\\\\.\\%s", filename);
-#endif
     } else {
         unit->filename = g_strdup(filename);
     }
