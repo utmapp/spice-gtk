@@ -36,7 +36,7 @@ fedora:
     - ninja -C build-spice-protocol install
 
   script:
-    - meson --buildtype=release build-default --werror
+    - meson --buildtype=release build-default --werror -Dphysical-cd=disabled
     # Meson does not update submodules recursively
     - git submodule update --init --recursive
     # this fix an issue with Meson dist
@@ -68,6 +68,6 @@ windows:
   script:
     - cd $CI_PROJECT_DIR
     - mkdir build-win64 && cd build-win64
-    - mingw64-meson --buildtype=release -Dgtk_doc=disabled --werror
+    - mingw64-meson --buildtype=release -Dgtk_doc=disabled --werror -Dphysical-cd=disabled
     - ninja install
     - (cd tests && DISPLAY= WINEPATH=/usr/x86_64-w64-mingw32/sys-root/mingw/bin wine test-coroutine.exe)
