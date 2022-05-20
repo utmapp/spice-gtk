@@ -121,9 +121,7 @@ static gboolean fill_usb_info(SpiceUsbDevice *dev)
     UsbDeviceInformation *info = &dev->device_info;
     get_usb_device_info_from_libusb_device(info, dev->libusb_device);
 
-    if (info->address == 0xff || /* root hub (HCD) */
-        info->address <= 1 || /* root hub or bad address */
-        (info->class == LIBUSB_CLASS_HUB) /*hub*/) {
+    if (info->class == LIBUSB_CLASS_HUB) /*hub*/ {
         return FALSE;
     }
     return TRUE;
