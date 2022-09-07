@@ -1,0 +1,348 @@
+# Georgian translation for Spice-gtk
+# Copyright (C) 2022 Red Hat inc
+# This file is distributed under the same license as the spice-gtk package.
+#
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022
+
+msgid ""
+msgstr ""
+"Project-Id-Version: spice-gtk\n"
+"Report-Msgid-Bugs-To: spice-devel@lists.freedesktop.org\n"
+"POT-Creation-Date: 2020-03-11 12:17+0100\n"
+"PO-Revision-Date: 2022-09-07 16:54+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: src/channel-main.c:1912
+msgid "The spice agent cancelled the file transfer"
+msgstr "Spice-ს აგენტმა ფაილის გადაგზავნა გააუქმა"
+
+#: src/channel-main.c:1916
+msgid "The spice agent reported an error during the file transfer"
+msgstr "Spice-ის აგენტის შეცდომა ფაილის გადაგზავნის დროს"
+
+#: src/channel-main.c:1923
+#, c-format
+msgid ""
+"File transfer failed due to lack of free space on remote machine (%s free, "
+"%s to transfer)"
+msgstr ""
+"ფაილის გადაგზავნის შეცდომა დაშორებულ მანქანაზე საკმარისი ადგილის არარსებობის "
+"გამო (%s თავისუფალი, %s საჭირო)"
+
+#: src/channel-main.c:1931
+msgid ""
+"User's session is locked and cannot transfer files, unlock it and try again."
+msgstr ""
+"მომხმარებლის სესია დაბლოკილია და ფაილების დაგზავნა შეუძლებელია. განბლოკეთ და "
+"თავიდან სცადეთ."
+
+#: src/channel-main.c:1936
+msgid "Session agent not connected."
+msgstr "სესიის აგენტი მიერთებული არაა."
+
+#: src/channel-main.c:1940
+msgid "File transfer is disabled."
+msgstr "ფაილის გადაცემა გათიშულია."
+
+#: src/channel-main.c:3350
+#, c-format
+msgid "The file transfer is disabled"
+msgstr "ფაილის გადაცემა გათიშულია"
+
+#: src/desktop-integration.c:99
+msgid "Automounting has been inhibited for USB auto-redirecting"
+msgstr "ავტომატური მიმაგრება დაყოვნებულია USB-ის ავტოგადადამისამართებისთვის"
+
+#: src/spice-channel.c:1177
+msgid "Authentication failed"
+msgstr "ავთენტიკაციის შეცდომა"
+
+#: src/spice-channel.c:1195
+msgid "Authentication failed: password is too long"
+msgstr "ავთენტიკაციის შეცდომა: პაროლი ძალიან გრძელია"
+
+#: src/spice-channel.c:1200
+msgid "Authentication failed: wrong password?"
+msgstr "ავთენტიკაციის შეცდომა: პაროლი არასწორია?"
+
+#: src/spice-option.c:61
+msgid "--spice-color-depth is deprecated. Use guest's display settings instead"
+msgstr ""
+"--spice-color-depth მოძველებულია. სანაცვლოდ სტუმრის ეკრანის პარამეტრები "
+"გამოიყენეთ"
+
+#: src/spice-option.c:81
+#, c-format
+msgid ""
+"invalid effect name (%s), must be 'wallpaper', 'font-smooth', 'animation' or "
+"'all'"
+msgstr ""
+"ეფექტის არასწორი სახელი (%s). უნდა იყოს 'wallpaper' (ფონის სურათი), 'font-"
+"smooth' (ფონტების მომრგვალება), 'animation' (ანიმაცია) ან 'all' (ყველა)"
+
+#: src/spice-option.c:105
+#, c-format
+msgid "invalid channel name (%s), valid names: all, %s"
+msgstr "არხის არასწორი სახელი (%s). სწორი სახელებია: all (ყველა) ან %s"
+
+#: src/spice-option.c:141
+#, c-format
+msgid "Image compression algorithm %s not supported"
+msgstr "გამოსახულების შეკუმშვის ალგორითმი მხარდაჭერილი არაა: %s"
+
+#: src/spice-option.c:163
+msgid "Force the specified channels to be secured"
+msgstr "მითითებული არხების დაცულობის ძალით ჩართვა"
+
+#: src/spice-option.c:165
+msgid "Disable guest display effects"
+msgstr "სტუმრის ეკრანის ეფექტების გამორთვა"
+
+#: src/spice-option.c:168
+msgid "Guest display color depth (deprecated)"
+msgstr "სტუმრის ეკრანის ფერების რაოდენობა (მოძველებული)"
+
+#: src/spice-option.c:170
+msgid "Truststore file for secure connections"
+msgstr "სანდო სერტიფიკატების საცავი დაცული შეერთებებისთვის"
+
+#: src/spice-option.c:170
+msgid "<file>"
+msgstr "<ფაილი>"
+
+#: src/spice-option.c:172
+msgid "Subject of the host certificate (field=value pairs separated by commas)"
+msgstr ""
+"ჰოსტის სერტიფიკატის საგანი (ველი=მნიშვნელობის ტიპის წყვილები, მძიმით "
+"გამოყოფილი)"
+
+#: src/spice-option.c:172
+msgid "<host-subject>"
+msgstr "<ჰოსტი-თემა>"
+
+#: src/spice-option.c:174
+msgid "Disable audio support"
+msgstr "აუდიოს მხარდაჭერის გამორთვა"
+
+#: src/spice-option.c:176
+msgid "Enable smartcard support"
+msgstr "სმარტ ბარათის მხარდაჭერის ჩართვა"
+
+#: src/spice-option.c:178
+msgid ""
+"Certificates to use for software smartcards (field=values separated by "
+"commas)"
+msgstr ""
+"პროგრამული სმარტ ბარათების სერტიფიკატები (ველი=მნიშვნელობის ტიპის წყვილები, "
+"მძიმით გამოყოფილი)"
+
+#: src/spice-option.c:178
+msgid "<certificates>"
+msgstr "<სერტიფიკატები>"
+
+#: src/spice-option.c:180
+msgid ""
+"Path to the local certificate database to use for software smartcard "
+"certificates"
+msgstr ""
+"ბილიკი პროგრამული სმარტ ბარათების სერტიფიკატებისათვის საჭირო ლოკალური "
+"სერტიფიკატების ბაზამდე"
+
+#: src/spice-option.c:180
+msgid "<certificate-db>"
+msgstr "<სერტიფიკატების ბაზა>"
+
+#: src/spice-option.c:182
+msgid "Disable USB redirection support"
+msgstr "USB-ის გადამისამართების მხარდაჭერის გამორთვა"
+
+#: src/spice-option.c:184
+msgid "Filter selecting USB devices to be auto-redirected when plugged in"
+msgstr ""
+"გაფილტრეთ USB მოწყობილობები, რომლებიც შეერთებისას ავტომატურად "
+"გადამისამართდება"
+
+#: src/spice-option.c:184 src/spice-option.c:186
+msgid "<filter-string>"
+msgstr "<ფილტრის-სტრიქონი>"
+
+#: src/spice-option.c:186
+msgid "Filter selecting USB devices to redirect on connect"
+msgstr "შეერთებისას ავტომატურად გადამისამართებული USB მოწყობილობების ფილტრი"
+
+#: src/spice-option.c:188
+msgid "Name of ISO file or CD/DVD device to share"
+msgstr "გასაზიარებელი ISO ფაილის სახელი ან CD/DVD მოწყობილობა"
+
+#: src/spice-option.c:188
+msgid "<filename> (repeat allowed)"
+msgstr "<ფაილის სახელი> (გამეორება დაშვებულია)"
+
+#: src/spice-option.c:190
+msgid "Image cache size (deprecated)"
+msgstr "გამოსახულებების ქეშის ზომა (მოძველებულია)"
+
+#: src/spice-option.c:190 src/spice-option.c:192
+msgid "<bytes>"
+msgstr "<ბაიტები>"
+
+#: src/spice-option.c:192
+msgid "Glz compression history size (deprecated)"
+msgstr "Glz შეკუმშვის ისტორიის ზომა (მოძველებული)"
+
+#: src/spice-option.c:194
+msgid "Shared directory"
+msgstr "გაზიარებული საქაღალდე"
+
+#: src/spice-option.c:194
+msgid "<dir>"
+msgstr "<საქაღალდე>"
+
+#: src/spice-option.c:196
+msgid "Preferred image compression algorithm"
+msgstr "გამოსახულების შეკუმშვის სასურველი ალგორითმი"
+
+#: src/spice-option.c:204
+msgid "Enable Spice-GTK debugging"
+msgstr "Spice-GTK-ის გამართვის ჩართვა"
+
+#: src/spice-option.c:206
+msgid "Display Spice-GTK version information"
+msgstr "Spice-GTK-ის ვერსიის ჩვენება"
+
+#: src/spice-option.c:211
+msgid "Spice Options:"
+msgstr "Spice -ის პარამეტრები:"
+
+#: src/spice-option.c:211
+msgid "Show Spice Options"
+msgstr "Spice-ის პარამეტრების ჩვენება"
+
+#: src/usb-device-manager.c:231 src/usb-device-manager.c:1427
+#: src/usb-device-manager.c:1491
+msgid "USB redirection support not compiled in"
+msgstr "USB-ის გადამისამართების მხარდაჭერა ჩაშენებული არაა"
+
+#: src/usb-device-manager.c:1135
+msgid "No free USB channel"
+msgstr "თავისუფალი USB არხის გარეშე"
+
+#: src/usb-device-manager.c:1373
+msgid "USB redirection is disabled"
+msgstr "USB-ის გადამისამართება გათიშულია"
+
+#: src/usb-device-manager.c:1379
+msgid "The connected VM is not configured for USB redirection"
+msgstr "მიერთებული ვმ-ი USB გადამისამართებისთვის მორგებული არაა"
+
+#: src/usb-device-manager.c:1402
+msgid "Some USB devices are blocked by host policy"
+msgstr "ზოგიერთი USB მოწყობილობა დაბლოკილია ჰოსტის წესებით"
+
+#: src/usb-device-manager.c:1420
+msgid "There are no free USB channels"
+msgstr "თავისუფალი USB არხის გარეშე"
+
+#: src/usb-device-widget.c:209
+msgid "Select ISO file or device"
+msgstr "აირჩიეთ ISO ფაილი ან მოწყობილობა"
+
+#: src/usb-device-widget.c:212
+msgid "_Cancel"
+msgstr "_შეწყვეტა"
+
+#: src/usb-device-widget.c:213
+msgid "_Open"
+msgstr "_გახსნა"
+
+#: src/usb-device-widget.c:224
+#, c-format
+msgid "shared CD %s, %s"
+msgstr "გაზიარებული CD %s, %s"
+
+#: src/usb-device-widget.c:242
+msgid "SPICE CD (empty)"
+msgstr "SPICE-ის CD (ცარიელი)"
+
+#: src/usb-device-widget.c:269
+msgid "Select USB devices to redirect"
+msgstr "აირჩიეთ გადასამისამართებელი USB მოწყობილობები"
+
+#: src/usb-device-widget.c:449
+#, c-format
+msgid "Can't redirect: %s"
+msgstr "გადამისამართების შეცდომა: %s"
+
+#: src/usb-device-widget.c:470
+#, c-format
+msgid "Select USB devices to redirect (%d free channel)"
+msgid_plural "Select USB devices to redirect (%d free channels)"
+msgstr[0] "აირჩიეთ გადასამისამართებელი USB მოწყობილობები (%d თავისუფალი არხი)"
+msgstr[1] "აირჩიეთ გადასამისამართებელი USB მოწყობილობები (%d თავისუფალი არხი)"
+
+#: src/usb-device-widget.c:488
+msgid "Redirecting USB Device..."
+msgstr "USB მოწყობილობის გადამისამართება..."
+
+#: src/usb-device-widget.c:496
+msgid "No USB devices detected"
+msgstr "USB მოწყობილობები ნაპოვნი არაა"
+
+#: src/usbutil.c:259
+msgid "USB"
+msgstr "USB"
+
+#: src/usbutil.c:261
+msgid "Device"
+msgstr "მოწყობილობა"
+
+#: tools/spice-cmdline.c:36
+msgid "Spice server uri"
+msgstr "SPICE-ის სერვერის URI"
+
+#: tools/spice-cmdline.c:37
+msgid "<uri>"
+msgstr "<uri>"
+
+#: tools/spice-cmdline.c:43
+msgid "Spice server address"
+msgstr "SPICE-ის სერვერის მისამართი"
+
+#: tools/spice-cmdline.c:44
+msgid "<host>"
+msgstr "<ჰოსტი>"
+
+#: tools/spice-cmdline.c:50
+msgid "Spice server port"
+msgstr "SPICE-ის სერვერის პორტი"
+
+#: tools/spice-cmdline.c:51 tools/spice-cmdline.c:58
+msgid "<port>"
+msgstr "<პორტი>"
+
+#: tools/spice-cmdline.c:57
+msgid "Spice server secure port"
+msgstr "SPICE-ის სერვერის დაცული პორტი"
+
+#: tools/spice-cmdline.c:64
+msgid "Server password"
+msgstr "სერვერის პაროლი"
+
+#: tools/spice-cmdline.c:65
+msgid "<password>"
+msgstr "პაროლი>"
+
+#: tools/spice-cmdline.c:76
+msgid "Spice connection options:"
+msgstr "Spice-ის მიერთების პარამეტრები:"
+
+#: tools/spice-cmdline.c:77
+msgid "Show Spice options"
+msgstr "Spice-ის პარამეტრების ჩვენება"
