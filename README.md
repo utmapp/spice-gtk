@@ -14,7 +14,7 @@ Project content
     * SpiceSession (see spice-session.h).
     * SpiceChannel (see spice-channel.h).
     * SpiceAudio (see spice-audio.h).
-    * Various Spice<Type>Channel (see channel-<type>.h).
+    * Various Spice\<Type\>Channel (see channel-\<type\>.h).
 
 * **libspice-client-gtk-3.0**
 
