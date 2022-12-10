@@ -3044,6 +3044,11 @@ static void update_mouse_cursor(SpiceDisplay *display)
     gint scale_factor;
     gint hotspot_x, hotspot_y;
 
+#if defined(GDK_WINDOWING_X11) || defined(GDK_WINDOWING_WAYLAND)
+    GdkDisplay *gdk_display = gtk_widget_get_display(GTK_WIDGET(display));
+    bool should_unscale_hotspot = false;
+#endif
+
     if (G_UNLIKELY(!d->mouse_pixbuf)) {
         return;
     }
@@ -3080,9 +3085,17 @@ static void update_mouse_cursor(SpiceDisplay *display)
     hotspot_x = d->mouse_hotspot.x * scale;
     hotspot_y = d->mouse_hotspot.y * scale;
 
-#ifdef GDK_WINDOWING_X11
+#if defined(GDK_WINDOWING_X11)
+    should_unscale_hotspot |= GDK_IS_X11_DISPLAY(gdk_display);
+#endif
+
+#if defined(GDK_WINDOWING_WAYLAND)
+    should_unscale_hotspot |= GDK_IS_WAYLAND_DISPLAY(gdk_display);
+#endif
+
+#if defined(GDK_WINDOWING_X11) || defined(GDK_WINDOWING_WAYLAND)
     /* undo hotspot scaling in gdkcursor */
-    if (GDK_IS_X11_DISPLAY(gtk_widget_get_display(GTK_WIDGET(display)))) {
+    if (should_unscale_hotspot) {
         hotspot_x /= scale_factor;
         hotspot_y /= scale_factor;
     }
