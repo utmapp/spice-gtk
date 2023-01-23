@@ -194,7 +194,7 @@ endif
 # soversion
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 spice_client_glib_current = 16
-spice_client_glib_revision = 1
+spice_client_glib_revision = 2
 spice_client_glib_age = 8
 spice_client_glib_so_version = '@0@.@1@.@2@'.format(spice_client_glib_current - spice_client_glib_age,
                                                     spice_client_glib_age,
@@ -382,7 +382,7 @@ if spice_gtk_has_gtk
   # soversion
   # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
   spice_client_gtk_current = 6
-  spice_client_gtk_revision = 0
+  spice_client_gtk_revision = 1
   spice_client_gtk_age = 1
   spice_client_gtk_so_version = '@0@.@1@.@2@'.format(spice_client_gtk_current - spice_client_gtk_age,
                                                      spice_client_gtk_age,

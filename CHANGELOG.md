@@ -1,3 +1,13 @@
+v0.42
+=====
+
+- !115 - Fix compilation on win32 with EGL
+- !114 - spice-widget: fix hotspot position on Wayland/HiDPI
+- !112 - meson: Allow building on a Wayland-only environment
+- !110 - usb-backend: Fix devices not being enumerated
+- !108 - spicy: Add keyboard shortcuts for copy/paste sync
+- Require meson >= 0.56
+
 v0.41
 =====
 
@@ -18,7 +28,7 @@ v0.40
 - !93 - #137 - add support for TLS-SNI
 - !92 - Support USB emulation for MacOS
 - !96 - Support side mouse buttons
-- !85 - #75 - add spice_display_keyboard_ungrab() 
+- !85 - #75 - add spice_display_keyboard_ungrab()
 - !81 - GL fix warning fix and improve scanout logic
 - !84 - Fix leak and warnings in gstaudio and spicy
 - !86, !87, !90 - Several introspection fixes and improvements
@@ -35,7 +45,7 @@ v0.39
 - !48 - Add support to Wayland mouse in server mode
 - !49 - #126 - Read all SASL buffer
 - !54 - Add Copy & Paste support over Webdav
-- !58 - Improve input and display on HiDPI displays 
+- !58 - Improve input and display on HiDPI displays
 - !64 - Add support for Physical size display
 - !69 - Fix leak on Display's surface
 - !74 - Fix read overflow on (not seamless) migration code
