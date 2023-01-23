@@ -32,6 +32,9 @@
 #ifdef GDK_WINDOWING_WAYLAND
 #include <gdk/gdkwayland.h>
 #endif
+#ifdef GDK_WINDOWING_WIN32
+#include <gdk/gdkwin32.h>
+#endif
 
 #define VERTS_ARRAY_SIZE (sizeof(GLfloat) * 4 * 4)
 #define TEX_ARRAY_SIZE (sizeof(GLfloat) * 4 * 2)
@@ -214,6 +217,11 @@ gboolean spice_egl_init(SpiceDisplay *display, GError **err)
 #ifdef GDK_WINDOWING_X11
     if (GDK_IS_X11_DISPLAY(gdk_dpy)) {
         dpy = (EGLNativeDisplayType)gdk_x11_display_get_xdisplay(gdk_dpy);
+    }
+#endif
+#ifdef GDK_WINDOWING_WIN32
+    if (GDK_IS_WIN32_DISPLAY(gdk_dpy)) {
+        dpy = (EGLNativeDisplayType)EGL_DEFAULT_DISPLAY; /* or perhaps wglGetCurrentDC? */
     }
 #endif
 
