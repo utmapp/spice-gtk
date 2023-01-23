@@ -67,16 +67,16 @@ static const char *spice_egl_fragment_src =     \
 ";
 
 static void apply_ortho(guint mproj, float left, float right,
-                        float bottom, float top, float near, float far)
+                        float bottom, float top, float _near, float _far)
 
 {
     float a = 2.0f / (right - left);
     float b = 2.0f / (top - bottom);
-    float c = -2.0f / (far - near);
+    float c = -2.0f / (_far - _near);
 
     float tx = - (right + left) / (right - left);
     float ty = - (top + bottom) / (top - bottom);
-    float tz = - (far + near) / (far - near);
+    float tz = - (_far + _near) / (_far - _near);
 
     float ortho[16] = {
         a, 0, 0, 0,
