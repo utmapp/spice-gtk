@@ -76,10 +76,7 @@ endforeach
 
 # FIXME: Add a config option to validate spice-widget-egl being built or not
 spice_gtk_has_egl = compiler.has_header('epoxy/egl.h')
-if spice_gtk_has_egl
-    spice_gtk_config_data.set('HAVE_EPOXY_EGL_H', '1')
-    spice_gtk_config_data.set('HAVE_EGL', '1') # FIXME: Use single define?
-endif
+spice_gtk_config_data.set('HAVE_EGL', spice_gtk_has_egl)
 
 #
 # check for system functions

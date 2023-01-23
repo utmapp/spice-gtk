@@ -22,7 +22,7 @@
 #include <windows.h>
 #endif
 
-#ifdef HAVE_EPOXY_EGL_H
+#ifdef HAVE_EGL
 #include <epoxy/egl.h>
 #endif
 
@@ -133,7 +133,7 @@ struct _SpiceDisplayPrivate {
     int                     x11_accel_denominator;
     int                     x11_threshold;
 #endif
-#if HAVE_EGL
+#ifdef HAVE_EGL
     struct {
         gboolean            context_ready;
         gboolean            enabled;

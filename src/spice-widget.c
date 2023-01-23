@@ -260,7 +260,7 @@ static gint get_display_id(SpiceDisplay *display)
 
 static bool egl_enabled(SpiceDisplayPrivate *d)
 {
-#if HAVE_EGL
+#ifdef HAVE_EGL
     return d->egl.enabled;
 #else
     return false;
@@ -602,7 +602,7 @@ static void grab_notify(SpiceDisplay *display, gboolean was_grabbed)
         release_keys(display);
 }
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
 static gboolean
 gl_area_render(GtkGLArea *area, GdkGLContext *context, gpointer user_data)
 {
@@ -668,7 +668,7 @@ static void spice_display_init(SpiceDisplay *display)
     gtk_stack_add_named(d->stack, area, "draw-area");
     gtk_stack_set_visible_child(d->stack, area);
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     area = gtk_gl_area_new();
     gtk_gl_area_set_required_version(GTK_GL_AREA(area), 3, 2);
     gtk_gl_area_set_auto_render(GTK_GL_AREA(area), false);
@@ -1456,7 +1456,7 @@ static gboolean do_color_convert(SpiceDisplay *display, GdkRectangle *r)
     return true;
 }
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
 static void set_egl_enabled(SpiceDisplay *display, bool enabled)
 {
     SpiceDisplayPrivate *d = display->priv;
@@ -1495,7 +1495,7 @@ static gboolean draw_event(GtkWidget *widget, cairo_t *cr, gpointer data)
     SpiceDisplayPrivate *d = display->priv;
     g_return_val_if_fail(d != NULL, false);
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     if (egl_enabled(d) &&
         g_str_equal(gtk_stack_get_visible_child_name(d->stack), "draw-area")) {
         spice_egl_update_display(display);
@@ -2302,7 +2302,7 @@ static void size_allocate(GtkWidget *widget, GtkAllocation *conf, gpointer data)
         d->ww = conf->width;
         d->wh = conf->height;
         recalc_geometry(widget);
-#if HAVE_EGL
+#ifdef HAVE_EGL
         if (egl_enabled(d)) {
             gint scale_factor = gtk_widget_get_scale_factor(widget);
             spice_egl_resize_display(display, conf->width * scale_factor, conf->height * scale_factor);
@@ -2351,7 +2351,7 @@ static void unrealize(GtkWidget *widget)
     SpiceDisplay *display = SPICE_DISPLAY(widget);
 
     spice_cairo_image_destroy(display);
-#if HAVE_EGL
+#ifdef HAVE_EGL
     if (display->priv->egl.context_ready) {
         spice_egl_unrealize_display(display);
     }
@@ -2702,7 +2702,7 @@ static void update_area(SpiceDisplay *display,
         .height = height
     };
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     if (egl_enabled(d)) {
         const SpiceGlScanout *so =
             spice_display_channel_get_gl_scanout(d->display);
@@ -2949,7 +2949,7 @@ static void invalidate(SpiceChannel *channel,
         .height = h
     };
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     set_egl_enabled(display, false);
 #endif
 
@@ -3106,7 +3106,7 @@ static void update_mouse_cursor(SpiceDisplay *display)
                                          hotspot_x,
                                          hotspot_y);
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     if (egl_enabled(d))
         spice_egl_cursor_set(display);
 #endif
@@ -3287,7 +3287,7 @@ static void inputs_channel_event(SpiceChannel *channel, SpiceChannelEvent event,
     spice_display_set_keypress_delay(display, delay);
 }
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
 G_GNUC_INTERNAL
 void spice_display_widget_gl_scanout(SpiceDisplay *display)
 {
@@ -3417,7 +3417,7 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, SpiceDisplay *di
         if (spice_display_channel_get_gl_scanout(d->display)) {
             spice_display_widget_gl_scanout(display);
         }
-#if HAVE_EGL
+#ifdef HAVE_EGL
         spice_g_signal_connect_object(channel, "gl-draw",
                                       G_CALLBACK(gl_draw), display, G_CONNECT_SWAPPED);
 #endif
@@ -3593,7 +3593,7 @@ GdkPixbuf *spice_display_get_pixbuf(SpiceDisplay *display)
     g_return_val_if_fail(d != NULL, NULL);
     g_return_val_if_fail(d->display != NULL, NULL);
 
-#if HAVE_EGL
+#ifdef HAVE_EGL
     if (egl_enabled(d)) {
         GdkPixbuf *tmp;
 
