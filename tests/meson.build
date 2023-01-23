@@ -24,7 +24,7 @@ endif
 # create a static library from a shared one extracting all objects
 # this allows to rewrite part of it if necessary for mocking
 test_lib = static_library('test-lib',
-                          objects : spice_client_glib_lib.extract_all_objects())
+                          objects : spice_client_glib_lib.extract_all_objects(recursive: true))
 
 foreach src : tests_sources
   name = 'test-@0@'.format(src).split('.')[0]
