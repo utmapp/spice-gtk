@@ -77,6 +77,10 @@ option('smartcard',
     type : 'feature',
     description : 'Enable smartcard support')
 
+option('egl',
+    type : 'feature',
+    description: 'EGL support')
+
 option('gtk_doc',
        type : 'feature',
        description : 'Generate API documentation with gtk-doc')

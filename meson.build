@@ -74,8 +74,7 @@ foreach header : headers
   endif
 endforeach
 
-# FIXME: Add a config option to validate spice-widget-egl being built or not
-spice_gtk_has_egl = compiler.has_header('epoxy/egl.h')
+spice_gtk_has_egl = compiler.has_header('epoxy/egl.h', required: get_option('egl'))
 spice_gtk_config_data.set('HAVE_EGL', spice_gtk_has_egl)
 
 #
