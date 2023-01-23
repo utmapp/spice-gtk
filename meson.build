@@ -119,7 +119,7 @@ endforeach
 
 deps = []
 if host_machine.system() == 'windows'
-  deps += ['libws2_32', 'libgdi32', 'libcomctl32']
+  deps += ['ws2_32', 'gdi32', 'comctl32']
 endif
 
 foreach dep : deps
