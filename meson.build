@@ -2,13 +2,13 @@
 # project definition
 #
 project('spice-gtk', 'c',
-         version : run_command('build-aux/git-version-gen', '@0@/.tarball-version'.format(meson.source_root()), check : true).stdout().strip(),
+         version : run_command('build-aux/git-version-gen', '@0@/.tarball-version'.format(meson.project_source_root()), check : true).stdout().strip(),
          license : 'LGPLv2.1',
-         meson_version : '>= 0.53',
+         meson_version : '>= 0.56',
          default_options : ['buildtype=debugoptimized',
                             'warning_level=2'])
 
-meson.add_dist_script('build-aux/meson-dist', meson.project_version(), meson.source_root())
+meson.add_dist_script('build-aux/meson-dist', meson.project_version(), meson.project_source_root())
 summary_info = {}
 
 #
@@ -170,9 +170,9 @@ if host_machine.system() != 'windows' and spice_gtk_has_gtk and compiler.has_hea
   summary_info += {'wayland-protocols': d.found()}
   if d.found()
     spice_gtk_config_data.set('HAVE_WAYLAND_PROTOCOLS', '1')
-    dir_wp_base = d.get_pkgconfig_variable('pkgdatadir')
+    dir_wp_base = d.get_variable(pkgconfig: 'pkgdatadir')
     dep_scanner = dependency('wayland-scanner', native: true)
-    prog_scanner = find_program(dep_scanner.get_pkgconfig_variable('wayland_scanner'))
+    prog_scanner = find_program(dep_scanner.get_variable(pkgconfig: 'wayland_scanner'))
 
     wayland_libs_version_required = '1.17.0'
     spice_wayland_deps += dependency('wayland-server', version : '>= @0@'.format(wayland_libs_version_required))
@@ -252,7 +252,7 @@ spice_gtk_has_polkit = false
 d = dependency('polkit-gobject-1', version : '>= 0.101', required : get_option('polkit'))
 summary_info += {'polkit': d.found()}
 if d.found()
-  spice_gtk_policy_dir = d.get_pkgconfig_variable('policydir')
+  spice_gtk_policy_dir = d.get_variable(pkgconfig: 'policydir')
 
   # TODO:  With 'auto', we should just disable polkit support if this is missing.
   if not compiler.has_function('acl_get_file')
@@ -293,7 +293,7 @@ spice_gtk_usb_ids_path = get_option('usb-ids-path')
 if spice_gtk_usb_ids_path.strip() == ''
   usbutils = dependency('usbutils', required : false)
   if usbutils.found()
-    spice_gtk_usb_ids_path = usbutils.get_pkgconfig_variable('usbids')
+    spice_gtk_usb_ids_path = usbutils.get_variable(pkgconfig: 'usbids')
   endif
 endif
 summary_info += {'usb-ids-path': spice_gtk_usb_ids_path}

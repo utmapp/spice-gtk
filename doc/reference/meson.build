@@ -34,9 +34,9 @@ ignore_headers = [
 
 spice_gtk_doc_dep = declare_dependency(link_with : [spice_client_gtk_lib, spice_client_glib_lib])
 
-glib_prefix = dependency('glib-2.0').get_pkgconfig_variable('prefix')
+glib_prefix = dependency('glib-2.0').get_variable(pkgconfig: 'prefix')
 glib_docpath = glib_prefix / 'share' / 'gtk-doc' / 'html'
-gtk_prefix = dependency('gtk+-3.0').get_pkgconfig_variable('prefix')
+gtk_prefix = dependency('gtk+-3.0').get_variable(pkgconfig: 'prefix')
 gtk_docpath = gtk_prefix / 'share' / 'gtk-doc' / 'html'
 docpath = spice_gtk_datadir / 'gtk-doc' / 'html'
 
@@ -51,9 +51,9 @@ gnome.gtkdoc(meson.project_name(),
                '--deprecated-guards="SPICE_DISABLE_DEPRECATED"',
                '--ignore-decorators="G_GNUC_INTERNAL"',
                '--rebuild-types',
-               meson.build_root() / 'src' / 'spice-version.h'
+               meson.project_build_root() / 'src' / 'spice-version.h'
              ],
-             src_dir : meson.source_root() / 'src',
+             src_dir : meson.project_source_root() / 'src',
              fixxref_args: [
                '--html-dir=@0@'.format(docpath),
                '--extra-dir=@0@'.format(glib_docpath / 'glib'),
