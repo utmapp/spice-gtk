@@ -328,18 +328,6 @@ if spice_gtk_has_gtk
     generated_protocols = [
       [ 'pointer-constraints', 'v1' ],
       [ 'relative-pointer', 'v1' ],
-     #[ 'input-method', 'v1' ],
-     #[ 'input-timestamps', 'v1' ],
-     #[ 'fullscreen-shell', 'v1' ],
-     #[ 'linux-dmabuf', 'v1' ],
-     #[ 'linux-explicit-synchronization', 'v1' ],
-     #[ 'presentation-time', 'stable' ],
-     #[ 'tablet', 'v2' ],
-     #[ 'text-input', 'v1' ],
-     #[ 'viewporter', 'stable' ],
-     #[ 'xdg-output', 'v1' ],
-     #[ 'xdg-shell', 'v6' ],
-     #[ 'xdg-shell', 'stable' ],
     ]
 
     foreach proto: generated_protocols
