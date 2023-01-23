@@ -147,8 +147,8 @@ d = dependency('gtk+-3.0', version : '>= @0@'.format(gtk_version_required),
 summary_info += {'gtk': d.found()}
 if d.found()
   spice_gtk_deps += d
+  spice_gtk_deps += dependency('epoxy', required: spice_gtk_has_egl)
   if host_machine.system() != 'windows'
-    spice_gtk_deps += dependency('epoxy')
     d = dependency('x11', required: false)
     if d.found()
       spice_gtk_deps += d
