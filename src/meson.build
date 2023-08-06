@@ -205,7 +205,7 @@ spice_client_glib_lib = library('spice-client-glib-2.0', spice_client_glib_sourc
                                 version : spice_client_glib_so_version,
                                 install : true,
                                 include_directories : spice_gtk_include,
-                                link_args : [spice_gtk_version_script],
+#                                link_args : [spice_gtk_version_script],
                                 link_depends : spice_client_glib_syms,
                                 dependencies : spice_glib_deps)
 
