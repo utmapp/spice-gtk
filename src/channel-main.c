@@ -1119,6 +1119,7 @@ gboolean spice_main_channel_send_monitor_config(SpiceMainChannel *channel)
     VDAgentMonitorsConfig *mon;
     int i, j, monitors;
     size_t size;
+    gboolean has_physical_size;
 
     g_return_val_if_fail(SPICE_IS_MAIN_CHANNEL(channel), FALSE);
     c = channel->priv;
@@ -1134,8 +1135,18 @@ gboolean spice_main_channel_send_monitor_config(SpiceMainChannel *channel)
         }
     }
 
-    size = sizeof(VDAgentMonitorsConfig) +
-        (sizeof(VDAgentMonConfig) + sizeof(VDAgentMonitorMM)) * monitors;
+    /* only enable sending physical size if needed */
+    has_physical_size = FALSE;
+    for (i = 0; i < SPICE_N_ELEMENTS(c->display); i++) {
+        if (c->display[i].width_mm || c->display[i].height_mm) {
+            has_physical_size = TRUE;
+        }
+    }
+
+    size = sizeof(VDAgentMonitorsConfig) + sizeof(VDAgentMonConfig) * monitors;
+    if (has_physical_size) {
+        size += sizeof(VDAgentMonitorMM) * monitors;
+    }
     mon = g_malloc0(size);
 
     mon->num_of_monitors = monitors;
@@ -1143,7 +1154,9 @@ gboolean spice_main_channel_send_monitor_config(SpiceMainChannel *channel)
         c->disable_display_align == FALSE)
         mon->flags |= VD_AGENT_CONFIG_MONITORS_FLAG_USE_POS;
 
-    mon->flags |= VD_AGENT_CONFIG_MONITORS_FLAG_PHYSICAL_SIZE;
+    if (has_physical_size) {
+        mon->flags |= VD_AGENT_CONFIG_MONITORS_FLAG_PHYSICAL_SIZE;
+    }
 
     CHANNEL_DEBUG(channel, "sending new monitors config to guest");
     j = 0;
@@ -1166,18 +1179,20 @@ gboolean spice_main_channel_send_monitor_config(SpiceMainChannel *channel)
         j++;
     }
 
-    VDAgentMonitorMM *mm = (void *)&mon->monitors[monitors];
-    for (i = 0, j = 0; i < SPICE_N_ELEMENTS(c->display); i++) {
-        if (c->display[i].display_state != DISPLAY_ENABLED) {
-            if (spice_main_channel_agent_test_capability(channel,
-                                                         VD_AGENT_CAP_SPARSE_MONITORS_CONFIG)) {
-                j++;
+    if (has_physical_size) {
+        VDAgentMonitorMM *mm = (void *)&mon->monitors[monitors];
+        for (i = 0, j = 0; i < SPICE_N_ELEMENTS(c->display); i++) {
+            if (c->display[i].display_state != DISPLAY_ENABLED) {
+                if (spice_main_channel_agent_test_capability(channel,
+                                                             VD_AGENT_CAP_SPARSE_MONITORS_CONFIG)) {
+                    j++;
+                }
+                continue;
             }
-            continue;
+            mm[j].width = c->display[i].width_mm;
+            mm[j].height = c->display[i].height_mm;
+            j++;
         }
-        mm[j].width = c->display[i].width_mm;
-        mm[j].height = c->display[i].height_mm;
-        j++;
     }
 
     if (c->disable_display_align == FALSE)
