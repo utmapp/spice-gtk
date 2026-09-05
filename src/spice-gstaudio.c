@@ -33,6 +33,8 @@ struct stream {
     guint                   rate;
     guint                   channels;
     gboolean                fake; /* fake channel just for getting info about audio (volume) */
+    GThread                 *state_thread;
+    GAsyncQueue             *state_jobs;
 };
 
 struct _SpiceGstaudioPrivate {
@@ -59,13 +61,73 @@ static void spice_gstaudio_get_record_volume_info_async(SpiceAudio *audio,
 static gboolean spice_gstaudio_get_record_volume_info_finish(SpiceAudio *audio,
         GAsyncResult *res, gboolean *mute, guint8 *nchannels, guint16 **volume, GError **error);
 
+/* Run gst_element_set_state() on a dedicated per-stream thread instead of the
+ * main context, since it can block indefinitely in AudioOutputUnitStop() on
+ * macOS. Jobs are serialized through one thread so a start cannot race a
+ * still-running stop on the same pipe. */
+struct state_job {
+    GstElement *pipe; /* NULL is the sentinel to stop the thread */
+    GstState state;
+};
+
+static gpointer state_thread_func(gpointer data)
+{
+    GAsyncQueue *jobs = data;
+    struct state_job *job;
+
+    while ((job = g_async_queue_pop(jobs))->pipe != NULL) {
+        gst_element_set_state(job->pipe, job->state);
+        gst_object_unref(job->pipe);
+        g_free(job);
+    }
+    g_free(job);
+    /* Only this thread knows it was signalled to stop, so it, not
+     * stream_dispose(), must drop the queue's last reference. */
+    g_async_queue_unref(jobs);
+    return NULL;
+}
+
+static void stream_set_state_async(struct stream *s, GstState state)
+{
+    struct state_job *job;
+
+    if (s->state_jobs == NULL) {
+        GAsyncQueue *jobs = g_async_queue_new();
+        GThread *thread = g_thread_try_new("spice-audio-state", state_thread_func, jobs, NULL);
+        if (thread == NULL) {
+            SPICE_DEBUG("failed to spawn audio state thread, calling set_state directly");
+            g_async_queue_unref(jobs);
+            gst_element_set_state(s->pipe, state);
+            return;
+        }
+        s->state_jobs = jobs;
+        s->state_thread = thread;
+    }
+
+    job = g_new(struct state_job, 1);
+    job->pipe = gst_object_ref(s->pipe);
+    job->state = state;
+    g_async_queue_push(s->state_jobs, job);
+}
+
 static void stream_dispose(struct stream *s)
 {
     if (s->pipe) {
-        gst_element_set_state(s->pipe, GST_STATE_NULL);
-        g_clear_pointer(&s->pipe, gst_object_unref);
+        stream_set_state_async(s, GST_STATE_NULL);
     }
 
+    if (s->state_jobs != NULL) {
+        /* Signal worker to stop via the NULL sentinel, and then detach as
+         * the worker may be stuck in AudioOutputUnitStop(). */
+        struct state_job *sentinel = g_new0(struct state_job, 1);
+        g_async_queue_push(s->state_jobs, sentinel);
+        g_thread_unref(s->state_thread);
+        s->state_jobs = NULL;
+        s->state_thread = NULL;
+    }
+
+    /* Each queued job keeps s->pipe alive via its own reference. */
+    g_clear_pointer(&s->pipe, gst_object_unref);
     g_clear_pointer(&s->src, gst_object_unref);
     g_clear_pointer(&s->sink, gst_object_unref);
 }
@@ -135,7 +197,7 @@ static void record_stop(SpiceGstaudio *gstaudio)
 
     SPICE_DEBUG("%s", __FUNCTION__);
     if (p->record.pipe)
-        gst_element_set_state(p->record.pipe, GST_STATE_READY);
+        stream_set_state_async(&p->record, GST_STATE_READY);
 }
 
 static gboolean record_bus_cb(GstBus *bus, GstMessage *msg, gpointer data)
@@ -195,7 +257,7 @@ static void record_start(SpiceRecordChannel *channel, gint format, gint channels
     if (p->record.pipe &&
         (p->record.rate != frequency ||
          p->record.channels != channels)) {
-        gst_element_set_state(p->record.pipe, GST_STATE_NULL);
+        stream_set_state_async(&p->record, GST_STATE_NULL);
         if (p->rbus_watch_id > 0) {
             g_spice_source_remove(p->rbus_watch_id);
             p->rbus_watch_id = 0;
@@ -241,7 +303,7 @@ cleanup:
     }
 
     if (p->record.pipe)
-        gst_element_set_state(p->record.pipe, GST_STATE_PLAYING);
+        stream_set_state_async(&p->record, GST_STATE_PLAYING);
 }
 
 static void playback_stop(SpiceGstaudio *gstaudio)
@@ -249,7 +311,7 @@ static void playback_stop(SpiceGstaudio *gstaudio)
     SpiceGstaudioPrivate *p = gstaudio->priv;
 
     if (p->playback.pipe)
-        gst_element_set_state(p->playback.pipe, GST_STATE_READY);
+        stream_set_state_async(&p->playback, GST_STATE_READY);
     if (p->mmtime_id != 0) {
         g_spice_source_remove(p->mmtime_id);
         p->mmtime_id = 0;
@@ -324,7 +386,7 @@ cleanup:
     }
 
     if (p->playback.pipe)
-        gst_element_set_state(p->playback.pipe, GST_STATE_PLAYING);
+        stream_set_state_async(&p->playback, GST_STATE_PLAYING);
 
     if (!p->playback.fake && p->mmtime_id == 0) {
         update_mmtime_timeout_cb(gstaudio);
